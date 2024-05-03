@@ -3,6 +3,8 @@ from django.contrib.staticfiles import finders
 import json
 import plotly.graph_objs as go
 from plotly.offline import plot
+from . import models
+from . import forms
 
 
 def process_data(data, parent_name=""):
@@ -42,3 +44,13 @@ def starting_page(request):
     diagram_div = plot(fig, output_type="div")
 
     return render(request, "navigator/sunburst.html", {"diagram_div": diagram_div})
+
+
+def feature_new(request):
+    if request.method == "POST":
+        form = forms.CreateFeature(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = forms.CreateFeature()
+    return render(request, "navigator/feature_new.html", {"form": form})

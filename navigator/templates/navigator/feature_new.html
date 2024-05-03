@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    New Feature
+{% endblock %}
+
+{%  block content %}
+    <section>
+        <h1> New Feature </h1>
+        <form action="{% url 'navigator:feature-new' %}" method="post"  encoding type="multipart/form-data"> 
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Submit</button>
+        </form>
+    </sections>
+{% endblock %}

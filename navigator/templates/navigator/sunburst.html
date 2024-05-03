@@ -5,7 +5,24 @@
     <title>Sunburst Diagramm</title>
 </head>
 <body>
-    <!-- Diagramm hier einfügen -->
+    <!-- Sunburst Diagramm -->
     {{ diagram_div|safe }}
+
+    <button onclick="addItem()">Add item</button>
+
+<script>
+    function addItem() {
+        let newFeature = prompt('Enter Feature name');
+        let token = #{{ csrf_token }};
+        let fromData = new FromData();
+        fromData.append('feature', newFeature);
+        fromData.append('csrfmiddlewaretoken', token);
+
+        fetch('/navigator/', {
+            method: 'POST',
+            body: fromData({
+            }),
+    }
+</script>
 </body>
 </html>
