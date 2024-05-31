@@ -1,3 +1,7 @@
-*.sqlite3
-*.db
+
 .vscode/
+__pycache__/
+*.pyc
+*.py[cod]
+navigator/__pycache__/
+edam_mq_navigator.code-workspace
