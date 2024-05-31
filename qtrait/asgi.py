@@ -1,5 +1,5 @@
 """
-ASGI config for edam_mq_navigator project.
+ASGI config for qtrait project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "edam_mq_navigator.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qtrait.settings")
 
 application = get_asgi_application()

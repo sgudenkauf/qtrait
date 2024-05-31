@@ -1,5 +1,5 @@
 """
-WSGI config for edam_mq_navigator project.
+WSGI config for qtrait.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "edam_mq_navigator.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qtrait.settings")
 
 application = get_wsgi_application()

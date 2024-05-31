@@ -50,7 +50,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "edam_mq_navigator.urls"
+ROOT_URLCONF = "qtrait.urls"
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "edam_mq_navigator.wsgi.application"
+WSGI_APPLICATION = "qtrait.wsgi.application"
 
 
 # Database
