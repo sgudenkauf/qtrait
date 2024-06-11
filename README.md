@@ -19,5 +19,9 @@ Open feature form:
 ```
 http://127.0.0.1:8000/feature-new/
 ```
-
+Admin
+... 
+username: jade
+pw: qtraid
+....
 
