@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.utils import timezone
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
@@ -25,14 +26,33 @@ class Service(models.Model):
         return self.name
 
 
-class Feature(models.Model):
+class Genre(MPTTModel):
+    name = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
+    )
+
+    def __str__(self):
+        return self.name
+
+    class MPTTMeta:
+        order_insertion_by = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Feature(MPTTModel):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    featureID = models.CharField(max_length=200)
-    parentID = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True
+    feature_id = models.CharField(max_length=200)
+    parent = TreeForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
+
+    class MPTTMeta:
+        order_insertion_by = ["name"]
 
     def __str__(self):
         return self.name
