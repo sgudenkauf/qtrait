@@ -1,8 +1,8 @@
 from django import forms
-from . import models
+from .models import Project, Service
 
 
-class CreateFeature(forms.ModelForm):
-    class Meta:
-        model = models.Feature
-        fields = ["name", "description", "featureID", "parentID"]
+class UploadFileForm(forms.Form):
+    project = forms.ModelChoiceField(queryset=Project.objects.all())
+    service_name = forms.CharField(max_length=200)
+    file = forms.FileField()
