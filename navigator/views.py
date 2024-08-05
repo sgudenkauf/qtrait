@@ -69,15 +69,14 @@ def upload_file_view(request):
             project = form.cleaned_data["project"]
             service_name = form.cleaned_data["service_name"]
             file = request.FILES["file"]
-            # Hier könnten Sie die Datei verarbeiten und in die Datenbank einfügen
-            # Zum Beispiel:
-            Service.objects.create(
+            # Datei verarbeiten.....
+            feature_new.objects.create(
                 project=project,
                 name=service_name,
                 description="Uploaded File",
                 serviceID="ServiceID",
             )
-            return redirect("success_url")  # Leiten Sie zu einer Bestätigungsseite um
+        # return redirect("xxxxx")  ggf eine bestatigungsseite
     else:
         form = UploadFileForm()
     return render(request, "navigator/upload_file.html", {"form": form})
