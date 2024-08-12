@@ -48,16 +48,6 @@ def starting_page(request):
     return render(request, "navigator/sunburst.html", {"diagram_div": diagram_div})
 
 
-def feature_new(request):
-    if request.method == "POST":
-        form = forms.CreateFeature(request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = forms.CreateFeature()
-    return render(request, "navigator/feature_new.html", {"form": form})
-
-
 def show_genres(request):
     return render(request, "navigator/genres.html", {"genres": Genre.objects.all()})
 
@@ -69,14 +59,7 @@ def upload_file_view(request):
             project = form.cleaned_data["project"]
             service_name = form.cleaned_data["service_name"]
             file = request.FILES["file"]
-            # Datei verarbeiten.....
-            feature_new.objects.create(
-                project=project,
-                name=service_name,
-                description="Uploaded File",
-                serviceID="ServiceID",
-            )
-        # return redirect("xxxxx")  ggf eine bestatigungsseite
+
     else:
         form = UploadFileForm()
     return render(request, "navigator/upload_file.html", {"form": form})
