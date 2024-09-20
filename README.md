@@ -24,4 +24,12 @@ http://127.0.0.1:8000/feature-new/
 username: jade
 pw: qtraid
 ```
+## requirements.txt
 
+
+Eine requirements.txt enthält die notwendigen Pakete für ein Python-Projekt mit der spezifischen Version. Mit pip install -r requirements.txt können die Pakete auf dem Zielsystem bereitgestellt werden. Für die Erstellung kann pip freeze > requirements.txt verwendet werden, das die Ausgabe der Konsole umleitet, die die Datei erstellt. 
+
+```
+pip install -r requirements.txt 
+pip freeze > requirements.txt
+```
