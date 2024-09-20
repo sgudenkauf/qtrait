@@ -1,0 +1,6 @@
+
+Django 
+django-filter 
+django-js-asset==2.2.0
+django-mptt==0.16.0
+lxml==4.9.3

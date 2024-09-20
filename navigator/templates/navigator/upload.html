@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XML Datei hochladen</title>
+</head>
+<body>
+    <h2>XML Datei hochladen</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'navigator:upload_xml' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+

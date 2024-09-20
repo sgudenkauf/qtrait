@@ -6,6 +6,5 @@ app_name = "navigator"
 
 urlpatterns = [
     path("", views.starting_page, name="starting-page"),
-    path("genres/", views.show_genres, name="show-genres"),
-    path("upload/", views.upload_file_view, name="upload_file"),
+    path("upload-xml/", views.upload_xml, name="upload_xml"),
 ]

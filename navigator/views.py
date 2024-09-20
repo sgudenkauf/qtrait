@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.staticfiles import finders
+from django.http import HttpResponse
 import json
 import plotly.graph_objs as go
 from plotly.offline import plot
 from . import models
 from . import forms
-from .models import Genre, Service
-from .forms import UploadFileForm
+from .models import Service, Feature, Project
+from .forms import XMLUploadForm
+from .xml_parser import parse_and_save_xml
 
 
 def process_data(data, parent_name=""):
@@ -48,18 +50,33 @@ def starting_page(request):
     return render(request, "navigator/sunburst.html", {"diagram_div": diagram_div})
 
 
-def show_genres(request):
-    return render(request, "navigator/genres.html", {"genres": Genre.objects.all()})
-
-
-def upload_file_view(request):
+def upload_xml(request):
     if request.method == "POST":
-        form = UploadFileForm(request.POST, request.FILES)
+        form = XMLUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            project = form.cleaned_data["project"]
-            service_name = form.cleaned_data["service_name"]
-            file = request.FILES["file"]
+            xml_file = request.FILES["xml_file"]
 
+            # Existierendes Projekt
+            existing_project = form.cleaned_data.get("existing_project")
+
+            # Neues Projekt
+            new_project_name = form.cleaned_data.get("new_project_name")
+            new_project_owner = form.cleaned_data.get("new_project_owner")
+            new_project_description = form.cleaned_data.get("new_project_description")
+
+            if existing_project:
+                project = existing_project
+            else:
+                project = Project.objects.create(
+                    name=new_project_name,
+                    owner=new_project_owner,
+                    description=new_project_description,
+                )
+
+            # Verarbeite die XML-Datei und speichere die Daten im ausgewählten/neuen Projekt
+            parse_and_save_xml(xml_file, project)
+            return HttpResponse("XML erfolgreich eingelesen!")
     else:
-        form = UploadFileForm()
-    return render(request, "navigator/upload_file.html", {"form": form})
+        form = XMLUploadForm()
+
+    return render(request, "navigator/upload.html", {"form": form})
