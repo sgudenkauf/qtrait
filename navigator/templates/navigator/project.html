@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunburst Diagramm</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #diagram-div {
+            width: 100%; /* Container soll die volle Breite einnehmen */
+            height: 80vh; /* Höhe des Diagramms (z. B. 80% der Viewport-Höhe) */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Auswahl Projekt -->
+    <label for="project-select">Wähle ein Projekt:</label>
+    <select id="project-select">
+        <option value="">-- Wähle ein Projekt --</option>
+        {% for project in projects %}
+        <option value="{{ project.id }}">{{ project.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Auswahl Service -->
+    <label for="service-select">Wähle einen Service:</label>
+    <select id="service-select" disabled>
+        <option value="">-- Wähle zuerst ein Projekt --</option>
+    </select>
+
+    <!-- Bereich für das Sunburst-Diagramm -->
+    <div id="diagram-div"></div>
+
+    <script>
+        // Projekt auswählen und Services laden
+        $('#project-select').on('change', function() {
+            var projectId = $(this).val();
+            if (projectId) {
+                $.ajax({
+                    url: '/navigator/get-services/' + projectId + '/',
+                    method: 'GET',
+                    success: function(data) {
+                        $('#service-select').empty().append('<option value="">-- Wähle einen Service --</option>');
+                        $.each(data, function(index, service) {
+                            $('#service-select').append('<option value="' + service.id + '">' + service.name + '</option>');
+                        });
+                        $('#service-select').prop('disabled', false);
+                    }
+                });
+            } else {
+                $('#service-select').prop('disabled', true).empty().append('<option value="">-- Wähle zuerst ein Projekt --</option>');
+            }
+        });
+
+        // Service auswählen und Diagramm laden
+        $('#service-select').on('change', function() {
+            var serviceId = $(this).val();
+            if (serviceId) {
+                $.ajax({
+                    url: '/navigator/get-sunburst-data/' + serviceId + '/',
+                    method: 'GET',
+                    success: function(data) {
+                        // Plotly Diagramm im Browser erstellen
+                        var labels = data.labels;
+                        var parents = data.parents;
+                        var ids = data.ids;
+
+                        Plotly.newPlot('diagram-div', [{
+                            type: 'sunburst',
+                            labels: labels,
+                            parents: parents,
+                            ids: ids
+                        }], {
+                            margin: { t:0, l:0, r:0, b:0 }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
