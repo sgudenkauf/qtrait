@@ -65,12 +65,15 @@
                         var labels = data.labels;
                         var parents = data.parents;
                         var ids = data.ids;
+                        var hovertexts = data.hovertexts; // Beschreibungen
 
                         Plotly.newPlot('diagram-div', [{
                             type: 'sunburst',
                             labels: labels,
                             parents: parents,
-                            ids: ids
+                            ids: ids,
+                            hovertext: hovertexts, // Hovertexte hinzufügen
+                            hoverinfo: 'label+text' // Labels und Texte anzeigen
                         }], {
                             margin: { t:0, l:0, r:0, b:0 }
                         });
@@ -82,3 +85,4 @@
 
 </body>
 </html>
+

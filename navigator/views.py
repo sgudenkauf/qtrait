@@ -10,13 +10,9 @@ from plotly.offline import plot
 
 
 def build_feature_dict(feature, processed_ids=None):
-    """
-    Baut eine hierarchische Datenstruktur
-    """
     if processed_ids is None:
         processed_ids = set()
 
-    # Überspringe bereits verarbeitete Features
     if feature.id in processed_ids:
         return None
     processed_ids.add(feature.id)
@@ -25,6 +21,7 @@ def build_feature_dict(feature, processed_ids=None):
     return {
         "id": feature.id,
         "name": feature.name,
+        "description": feature.description,  # Beschreibung hinzufügen
         "children": [
             build_feature_dict(child, processed_ids)
             for child in children
@@ -37,11 +34,13 @@ def process_data_2(service, features):
     labels = []
     parents = []
     ids = []
-    processed_ids = set()  # Verarbeitete IDs speichern
+    hovertexts = []  # Für Beschreibungen
+    processed_ids = set()
 
     def add_feature_to_sunburst(feature, parent_id=None):
         current_label = feature["name"]
         current_id = (parent_id + "|" + current_label) if parent_id else current_label
+        current_hovertext = feature.get("description", "Keine Beschreibung verfügbar")
 
         # Überspringe bereits verarbeitete Features
         if current_id in processed_ids:
@@ -51,22 +50,23 @@ def process_data_2(service, features):
         labels.append(current_label)
         ids.append(current_id)
         parents.append(parent_id if parent_id else "")
+        hovertexts.append(current_hovertext)
 
         if "children" in feature and feature["children"]:
             for child in feature["children"]:
                 add_feature_to_sunburst(child, current_id)
 
-    # Der Service ist die Wurzel
+    # Service als Wurzel hinzufügen
     service_id = f"service_{service.id}"
     labels.append(service.name)
     ids.append(service_id)
-    parents.append("")  # Service hat keinen Parent
+    parents.append("")
+    hovertexts.append(service.description or "Keine Beschreibung verfügbar")
 
-    # Füge alle Features als Kinder hinzu
     for feature in features:
         add_feature_to_sunburst(feature, service_id)
 
-    return labels, parents, ids
+    return labels, parents, ids, hovertexts
 
 
 def starting_page(request):
@@ -147,9 +147,13 @@ def get_sunburst_data(request, service_id):
     root_features = service.feature_set.filter(parent__isnull=True)
     data = [build_feature_dict(feature) for feature in root_features]
 
-    labels, parents, ids = process_data_2(service, data)
+    labels, parents, ids, hovertexts = process_data_2(service, data)
 
-    return JsonResponse({"labels": labels, "parents": parents, "ids": ids}, safe=False)
+    # Rückgabe der Daten inklusive Hovertexte
+    return JsonResponse(
+        {"labels": labels, "parents": parents, "ids": ids, "hovertexts": hovertexts},
+        safe=False,
+    )
 
 
 def debug_sunburst_data(request, service_id):
